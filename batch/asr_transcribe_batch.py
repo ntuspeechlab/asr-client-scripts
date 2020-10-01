@@ -61,7 +61,7 @@ def check_status(speech_id):
 
 def download_trans(speech_id):
     try:
-        url = _SPEECH_URL + '/speech/result/' + speech_id
+        url = _SPEECH_URL + '/speech/' + speech_id + '/result'
         res = requests.get(url, headers=_HEADER)
         with open(speech_id + '.zip', 'wb') as f:
            f.write(res.content)
