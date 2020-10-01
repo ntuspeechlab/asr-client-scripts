@@ -38,6 +38,9 @@
   * Command (with example audios in audio/)
   
         $ python3 batch/asr_transcribe_batch.py audio/audio.wav
+        
+  * Further usage, please check [here](https://maitrungduc.gitbook.io/ai-speechlab/guide/offline/usage/using-http-request).
+
 
 ## Contact us
 Visit us at [this link](https://temasek-labs.ntu.edu.sg/Research/KET/Pages/Speech-Recognition.aspx) 
