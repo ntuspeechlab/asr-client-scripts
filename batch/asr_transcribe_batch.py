@@ -2,7 +2,7 @@
 Client module calling remote ASR 
 
 @Updated: October 01, 2020
-@Maintained by: Ly
+@Maintain by: Ly
 
 """
 
@@ -87,18 +87,19 @@ def send_audio(audio_file):
         }
         data = {
               'lang': _LANGUAGE,
-              'queue': _QUEUE # this is important, you must parse 'dhl' here
+              'queue': _QUEUE # this is important, you must parse correct queue for your account here
         }
         
         res = requests.post(url, files=files, data=data, headers=_HEADER)
         res = res.json()
         
+        speech_id=None
         if ('statusCode' in res and res['statusCode'] == 404):
             print('Error in submitting audio(s): ', str(res), '. \nPlease check your token again.')
-            speech_id=None
+
         elif ('statusCode' in res and res['statusCode'] == 403):
             print('Error in submitting audio(s): ', str(res), '. \nPlease change your queue information.')
-            speech_id=None
+
         else: 
             speech_id = res['_id']
         return speech_id
@@ -110,12 +111,12 @@ def send_audio(audio_file):
 def main(audiofile):
     
     audio_length_in_seconds = get_audio_length(audiofile)
-    _time_delay = max(60.0, audio_length_in_seconds)
+    _time_delay = max(60.0, audio_length_in_seconds) # The lowest boundary is 1min. 
     
     speech_id = send_audio(audiofile)
     print('... Getting speech id %s ...' % speech_id)
     if (speech_id == None):
-        sys.exit("You don't have a speech id to process.")
+        sys.exit("*** You don't have a speech id to process.")
     
     
     completed = False
