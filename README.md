@@ -1,12 +1,12 @@
 # asr-client-scripts
 
 
-## To use demo engines
+## 1. To use demo engines
 
-  * Try demo for free on webUI without programming at AISG https://makerspace.aisingapore.org/do-ai/speech-lab/
+  * Try demo for free on webUI without programming/scripting at [AISingapore](https://makerspace.aisingapore.org/do-ai/speech-lab/)
 
 
-## To use AISpeechlab engine with livestreaming mode
+## 2. To use AISpeechlab engine with livestreaming mode
   * Dependencies
   
         * ws4py
@@ -29,7 +29,7 @@
             
         
 
-## To use AISpeechlab engine with batch mode
+## 3. To use AISpeechlab engine with batch mode
   * Dependencies
   
         * python3
