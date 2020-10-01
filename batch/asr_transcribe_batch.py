@@ -102,7 +102,7 @@ def send_audio(audio_file):
 
 def main(audiofile):
     
-    audio_length_in_seconds = get_audio_length('16k_16PCM_eng.wav')
+    audio_length_in_seconds = get_audio_length(audiofile)
     _time_delay = max(60.0, audio_length_in_seconds)
     
     speech_id = send_audio(audiofile)
