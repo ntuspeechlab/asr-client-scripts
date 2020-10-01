@@ -55,27 +55,28 @@ def check_status(speech_id):
         res = requests.get(url, headers=_HEADER)
         res = res.json()
         cur_status = res['status']
-        print("Current status: " + cur_status)
+        print("... Current status: " + cur_status)
         return cur_status
         
     except Exception as ex:
-        print('Error in getting ASR status: ', str(ex))
+        print('... Error in getting ASR status: ', str(ex))
 
 
 def download_trans(speech_id):
     try:
         url = _SPEECH_URL + '/speech/' + speech_id + '/result'
+        res = requests.get(url, headers=_HEADER)
         result_link = res.json()['url']
-        print("Download link: " + result_link)
+        print("... Download link: " + result_link)
         
         with urllib.request.urlopen(result_link) as response, open(speech_id + '.zip', 'wb') as out_file:
            content_length = int(response.getheader('Content-Length'))
            shutil.copyfileobj(response, out_file)
-           print(f"File saved. {content_length:,} bytes.")
+           print(f"... File saved. {content_length:,} bytes.")
         
         return res.ok
     except Exception as ex:
-        print('Error in getting ASR status: ', str(ex))
+        print('... Error in getting ASR status: ', str(ex))
 
 
 def send_audio(audio_file):
@@ -95,17 +96,17 @@ def send_audio(audio_file):
         
         speech_id=None
         if ('statusCode' in res and res['statusCode'] == 404):
-            print('Error in submitting audio(s): ', str(res), '. \nPlease check your token again.')
+            print('... Error in submitting audio(s): ', str(res), '. \nPlease check your token again.')
 
         elif ('statusCode' in res and res['statusCode'] == 403):
-            print('Error in submitting audio(s): ', str(res), '. \nPlease change your queue information.')
+            print('... Error in submitting audio(s): ', str(res), '. \nPlease change your queue information.')
 
         else: 
             speech_id = res['_id']
         return speech_id
         
     except Exception as ex:
-        print('Exception in submitting audio(s): ', str(ex))
+        print('... Exception in submitting audio(s): ', str(ex))
 
 
 def main(audiofile):
