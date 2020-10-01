@@ -11,6 +11,9 @@ import sys
 import json
 import requests
 import subprocess
+import shutil
+import urllib.request
+
 
 __version__ = "1.0.0"
 __author__  = "AISpeechlab - NTU"
@@ -62,10 +65,14 @@ def check_status(speech_id):
 def download_trans(speech_id):
     try:
         url = _SPEECH_URL + '/speech/' + speech_id + '/result'
-        res = requests.get(url, headers=_HEADER)
-        with open(speech_id + '.zip', 'wb') as f:
-           f.write(res.content)
-
+        result_link = res.json()['url']
+        print("Download link: " + result_link)
+        
+        with urllib.request.urlopen(result_link) as response, open(speech_id + '.zip', 'wb') as out_file:
+           content_length = int(response.getheader('Content-Length'))
+           shutil.copyfileobj(response, out_file)
+           print(f"File saved. {content_length:,} bytes.")
+        
         return res.ok
     except Exception as ex:
         print('Error in getting ASR status: ', str(ex))
@@ -114,13 +121,13 @@ def main(audiofile):
     completed = False
     _MAX_TRY = 10
     i = 0
-    while not completed and i < _MAX_TRY:
+    while (completed != "done") and i < _MAX_TRY:
         time.sleep(_time_delay)
         i += 1
         print('... %02d waiting ASR result ...' % i)
         completed = check_status(speech_id)
 
-    if not completed:
+    if (completed != "done"):
         print('*** Error: ASR did not complete the transcription')
     else:
         print('*** ASR done!')
