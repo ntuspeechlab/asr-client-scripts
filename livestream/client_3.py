@@ -2,7 +2,6 @@
 Client module calling remote ASR 
 
 @Updated: October 01, 2020
-@Maintained by: Ly
 
 """
 __version__ = "1.0.0"
@@ -29,7 +28,6 @@ RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
 import logging
-import logging.handlers
 # create logger
 logger = logging.getLogger('client')
 logger.setLevel(logging.DEBUG)
@@ -90,6 +88,9 @@ class MyClient(WebSocketClient):
 
     def opened(self):
         logger.info("Socket opened! " + self.__str__())
+
+    def received_message(self, m):
+        response = json.loads(str(m))
         def send_data_to_ws():
             if self.send_adaptation_state_filename is not None:
                 logger.info("Sending adaptation state from %s" % self.send_adaptation_state_filename)
@@ -121,13 +122,6 @@ class MyClient(WebSocketClient):
 
             logger.info("Audio sent, now sending EOS")
             self.send("EOS")
-
-        t = threading.Thread(target=send_data_to_ws)
-        t.start()
-
-
-    def received_message(self, m):
-        response = json.loads(str(m))
         if response['status'] == 0:
             if 'result' in response:
                 trans = response['result']['hypotheses'][0]['transcript']
@@ -150,9 +144,13 @@ class MyClient(WebSocketClient):
                     with open(self.save_adaptation_state_filename, "w") as f:
                         f.write(json.dumps(response['adaptation_state']))
         else:
-            logger.info("Received error from server (status %d)" % response['status'])
+            logger.info("Received message from server (status %d)" % response['status'])
             if 'message' in response:
-                logger.info("Error message: %s" %  response['message'])
+                logger.info("Message: %s" %  response['message'])
+                if response['message'] == 'ready':
+                    print('------------------------')
+                    t = threading.Thread(target=send_data_to_ws)
+                    t.start()
 
 
     def get_full_hyp(self, timeout=60):
@@ -160,6 +158,8 @@ class MyClient(WebSocketClient):
 
     def closed(self, code, reason=None):
         print("Websocket closed() called")
+        print(code)
+        print(reason)
         #print >> sys.stderr
         self.final_hyp_queue.put(" ".join(self.final_hyps))
 
