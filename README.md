@@ -39,7 +39,7 @@
   
         $ python3 batch/asr_transcribe_batch.py audio/audio.wav
         
-  * Further usage, please check [here](https://maitrungduc.gitbook.io/ai-speechlab/guide/offline/usage/using-http-request).
+  * Further usage, please check [here](https://speech-ntu.gitbook.io/speech-gateway/guide-1/batch-transcribe/usage).
 
 
 ## Contact us
